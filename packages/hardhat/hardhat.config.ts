@@ -47,7 +47,8 @@ const config: HardhatUserConfig = {
       accounts: [deployerPrivateKey],
     },
     sepolia: {
-      url: `https://eth-sepolia.g.alchemy.com/v2/${providerApiKey}`,
+      chainId: 11155111,
+      url: providerApiKey,
       accounts: [deployerPrivateKey],
     },
     goerli: {
@@ -115,10 +116,9 @@ const config: HardhatUserConfig = {
       accounts: [deployerPrivateKey],
     },
   },
-  verify: {
-    etherscan: {
-      apiKey: `${etherscanApiKey}`,
-    },
+
+  etherscan: {
+    apiKey: `${etherscanApiKey}`,
   },
 };
 

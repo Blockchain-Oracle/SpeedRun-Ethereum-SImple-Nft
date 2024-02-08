@@ -1,5 +1,6 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
+import { network, run } from "hardhat";
 
 /**
  * Deploys a contract named "YourContract" using the deployer account and
@@ -19,9 +20,9 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
     You can run the `yarn account` command to check your balance in every network.
   */
   const { deployer } = await hre.getNamedAccounts();
-  const { deploy } = hre.deployments;
+  const { deploy, log } = hre.deployments;
 
-  await deploy("YourCollectible", {
+  const YourCollectible = await deploy("YourCollectible", {
     from: deployer,
     // Contract constructor arguments
     args: [],
@@ -33,6 +34,24 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
 
   // Get the deployed contract
   // const yourContract = await hre.ethers.getContract("YourCollectible", deployer);
+
+  //verifying contract on etherscan
+  if (network.config.chainId !== 31337) {
+    log("verifying contract on etherscan pls wait");
+    log("YourCollectible address", YourCollectible.address);
+    try {
+      await run("verify:verify", {
+        address: YourCollectible.address,
+        constructorArguments: [],
+      });
+    } catch (e) {
+      if (e.Reason == "Already Verified") {
+        console.log("Contract Already verifled");
+      } else {
+        console.log(e);
+      }
+    }
+  }
 };
 
 export default deployYourContract;
